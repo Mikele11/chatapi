@@ -1,0 +1,16 @@
+sudo: true
+dist: trusty
+
+language: node_js
+services:
+- docker
+
+jobs:
+  include:
+    - stage: build & push docker image
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+      - docker build -t travis-ci-api .
+      - docker images
+      - docker tag travis-ci-api  $DOCKER_USERNAME/app-api
+      - docker push $DOCKER_USERNAME/app-api
